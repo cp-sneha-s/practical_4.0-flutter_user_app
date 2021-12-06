@@ -6,6 +6,8 @@ import 'package:flutter_food_app/view_model/food_view_model.dart';
 import 'package:flutter_food_app/view_model/netwok_response.dart';
 import 'package:provider/provider.dart';
 
+import 'food_card.dart';
+
 class HomeScreen extends StatelessWidget {
   NetworkResponse networkResponse = NetworkResponse();
 
@@ -16,7 +18,7 @@ class HomeScreen extends StatelessWidget {
       home: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: const Text('Food List'),
+            title: const Text('Hello Foodies'),
             backgroundColor: Colors.blueGrey,
           ),
           body: Consumer<FoodViewModel>(
@@ -26,40 +28,18 @@ class HomeScreen extends StatelessWidget {
                 builder: (context, data) {
                   if (data.hasData) {
                     FoodList list = data.data as FoodList;
-                    print('MakeupList:' + list.toString());
                     return ListView.builder(
                       itemCount: list.foodList.length,
                       itemBuilder: (BuildContext context, int index) {
                         Food item = list.foodList[index];
-                        return Card(
-                          color: Colors.white54,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(item.foodName,style: const TextStyle(
-                                  color: Colors.black,fontSize: 15,
-                                  fontWeight: FontWeight.w600
-                              ),),
-                              Text(item.flag ,style: const TextStyle(
-                                  color: Colors.black,fontSize: 15,
-                                  fontWeight: FontWeight.w300
-                              ),),
-                              Text(item.image,style: const TextStyle(
-                                color: Colors.blue,fontSize: 15,fontWeight: FontWeight.w300
-                              ),)
-                            ],
-                          ),
-
-
-                        );
+                        return FoodCard(item: item);
                       },
                     );
                   } else if (data.hasError) {
                     throw Exception(
                         'Failed to load:' + data.error.toString());
                   }
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 },
               );
             },
@@ -69,3 +49,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+
