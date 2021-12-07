@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 import 'food_card.dart';
 
 class HomeScreen extends StatelessWidget {
-  NetworkResponse networkResponse = NetworkResponse();
+
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,20 +25,20 @@ class HomeScreen extends StatelessWidget {
           body: Consumer<FoodViewModel>(
             builder: (context, foodViewModel, child) {
               return FutureBuilder<FoodList>(
-                future: networkResponse.getFoodList(),
+                future: foodViewModel.getFoodListFromNetworkResponse(),
                 builder: (context, data) {
+                  print('homeScreen: list found ' + data.data.toString());
                   if (data.hasData) {
-                    FoodList list = data.data as FoodList;
+                    FoodList? list = data.data as FoodList;
                     return ListView.builder(
                       itemCount: list.foodList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        Food item = list.foodList[index];
+                        Food? item = list.foodList[index];
                         return FoodCard(item: item);
                       },
                     );
                   } else if (data.hasError) {
-                    throw Exception(
-                        'Failed to load:' + data.error.toString());
+                    throw Exception('Failed to load:' + data.error.toString());
                   }
                   return const Center(child: CircularProgressIndicator());
                 },
@@ -49,5 +50,3 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
-
-

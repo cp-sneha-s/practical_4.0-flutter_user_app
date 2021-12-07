@@ -9,7 +9,7 @@ class NetworkResponse {
         .get(Uri.parse('https://yummly2.p.rapidapi.com/feeds/list'), headers: {
       'content-type': 'application/json',
       'x-rapidapi-host': 'yummly2.p.rapidapi.com',
-      'x-rapidapi-key': '826155c0damshb4218ffbcf2554dp1a2017jsn8965ebf45cfb'
+      'x-rapidapi-key': '6991e41207mshaaf1e8dd61f03fdp17fbe9jsn3c96953146c7'
     });
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

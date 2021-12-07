@@ -1,7 +1,7 @@
 import 'food_model.dart';
 
 class FoodList{
-  final List<Food> foodList;
+   final List<Food> foodList;
 
   FoodList({required this.foodList});
   factory FoodList.fromJson(Map<String, dynamic> json){
@@ -11,3 +11,5 @@ class FoodList{
         foodList: foodlist);
   }
 }
+
+
