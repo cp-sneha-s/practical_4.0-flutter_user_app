@@ -19,7 +19,6 @@ class FoodViewModel extends ChangeNotifier {
 
   Future<List<Food>> storeToDatabase() async {
     listOfFood = await getFoodListFromNetworkResponse().then((value) => value.foodList);
-
     notifyListeners();
     for (int i = 0; i < listOfFood.length; i++) {
       Food food = listOfFood[i];
@@ -33,7 +32,8 @@ class FoodViewModel extends ChangeNotifier {
   }
 
   Future<List<Food>> getFoodListFromDatabase() async {
-    await FoodDatabase.db.getFoodList().then((value) => value = listOfFood);
+  await FoodDatabase.db.getFoodList().then((value) => listOfFood =value  );
+    notifyListeners();
     return listOfFood;
   }
 }

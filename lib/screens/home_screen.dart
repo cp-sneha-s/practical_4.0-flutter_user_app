@@ -24,16 +24,16 @@ class HomeScreen extends StatelessWidget {
           ),
           body: Consumer<FoodViewModel>(
             builder: (context, foodViewModel, child) {
-              return FutureBuilder<FoodList>(
-                future: foodViewModel.getFoodListFromNetworkResponse(),
+              return FutureBuilder<List<Food>>(
+                future: foodViewModel.storeToDatabase(),
                 builder: (context, data) {
                   print('homeScreen: list found ' + data.data.toString());
                   if (data.hasData) {
-                    FoodList? list = data.data as FoodList;
+                    List<Food>? list = data.data as List<Food>;
                     return ListView.builder(
-                      itemCount: list.foodList.length,
+                      itemCount: list.length,
                       itemBuilder: (BuildContext context, int index) {
-                        Food? item = list.foodList[index];
+                        Food item = list[index];
                         return FoodCard(item: item);
                       },
                     );
