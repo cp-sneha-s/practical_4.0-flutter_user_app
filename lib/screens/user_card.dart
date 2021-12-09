@@ -5,7 +5,7 @@ import 'package:flutter_food_app/model/food_model.dart';
 class FoodCard extends StatelessWidget {
   const FoodCard({required this.item});
 
-  final Food item;
+  final User item;
 
   @override
   Widget build(BuildContext context) {
@@ -17,21 +17,21 @@ class FoodCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              item.foodName??'',
+              'Name:' +item.name,
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 15,
                   fontWeight: FontWeight.w600),
             ),
             Text(
-              item.flag??'',
+              'Email:' +item.email,
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 15,
                   fontWeight: FontWeight.w300),
             ),
             Text(
-              item.image??'',
+             'City: ' + item.city,
               style: const TextStyle(
                   color: Colors.blue,
                   fontSize: 15,

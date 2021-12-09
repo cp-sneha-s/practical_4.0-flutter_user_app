@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
-part 'food_model.g.dart';
+part 'user_model.g.dart';
 
 
 
 @JsonSerializable()
-class Food{
-  final String? foodName;
-  final String? flag;
-  final String? image;
+class User{
+  final String name;
+  final String email;
+  final String city;
 
-  Food({ required this.foodName, required this.flag, required this.image});
+  User({ required this.name, required this.email, required this.city});
 
-  factory Food.fromJson(Map<String,dynamic> json)=> _$FoodFromJson(json);
+  factory User.fromJson(Map<String,dynamic> json)=> _$UserFromJson(json);
 
-  Map<String,dynamic> toMap() => _$FoodToJson(this);
+  factory User.fromMap(Map<String,dynamic> map) {
+    return User(name: map['name'],
+        email: map['email'],
+        city: map['city']);
+  }
+
+  Map<String,dynamic> toMap() => _$UserToJson(this);
 
 }
