@@ -1,9 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_food_app/model/food_list.dart';
 import 'package:flutter_food_app/model/food_model.dart';
 import 'package:flutter_food_app/view_model/food_view_model.dart';
-import 'package:flutter_food_app/view_model/netwok_response.dart';
 import 'package:provider/provider.dart';
 
 import 'food_card.dart';

@@ -5,15 +5,8 @@ import 'package:sqflite/sqflite.dart';
 
 class FoodDatabase {
   static final FoodDatabase db = FoodDatabase._init();
-  static late Database _database;
 
   FoodDatabase._init();
-
-  Future<Database> get database async {
-    if (_database != null) return _database;
-    _database = await initDb();
-    return _database;
-  }
 
  Future<Database> initDb() async {
     return  openDatabase(join(await getDatabasesPath(), 'food.db'),
@@ -27,7 +20,7 @@ class FoodDatabase {
   }
 
   Future<List<Food>> getFoodList() async {
-    final db = await database;
+    final db = await initDb();
 
     List<Map<String, dynamic>> data = await db.query('food');
     List<Food> foodList = [];
@@ -40,13 +33,13 @@ class FoodDatabase {
   }
 
   Future<int> deleteFood(Food food) async {
-    final db = await database;
+    final db = await initDb();
     return await db
         .delete('food', where: "displayName = ?", whereArgs: [food.foodName]);
   }
 
   insertFood(Food food) async {
-    final db = await database;
+    final db = await initDb();
     final newfood = db.insert('food', food.toMap());
     return newfood;
   }
