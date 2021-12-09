@@ -1,15 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_food_app/model/food_list.dart';
 import 'package:flutter_food_app/model/food_model.dart';
 import 'package:flutter_food_app/view_model/food_view_model.dart';
+import 'package:flutter_food_app/view_model/netwok_response.dart';
 import 'package:provider/provider.dart';
-
 import 'food_card.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
 
-  HomeScreen({Key? key}) : super(key: key);
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends State<HomeScreen> {
+
+
+  NetworkResponse networkResponse = NetworkResponse();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Provider.of<FoodViewModel>(context).storeToDatabase();
+  }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,7 +37,7 @@ class HomeScreen extends StatelessWidget {
           body: Consumer<FoodViewModel>(
             builder: (context, foodViewModel, child) {
               return FutureBuilder<List<Food>>(
-                future: foodViewModel.storeToDatabase(),
+                future: foodViewModel.getFoodListFromDatabase(),
                 builder: (context, data) {
                   print('homeScreen: list found ' + data.data.toString());
                   if (data.hasData) {
@@ -48,3 +62,5 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+

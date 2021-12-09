@@ -17,21 +17,21 @@ class FoodCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              item.foodName,
+              item.foodName??'',
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 15,
                   fontWeight: FontWeight.w600),
             ),
             Text(
-              item.flag,
+              item.flag??'',
               style: const TextStyle(
                   color: Colors.black,
                   fontSize: 15,
                   fontWeight: FontWeight.w300),
             ),
             Text(
-              item.image,
+              item.image??'',
               style: const TextStyle(
                   color: Colors.blue,
                   fontSize: 15,

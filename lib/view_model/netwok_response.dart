@@ -9,11 +9,12 @@ class NetworkResponse {
         .get(Uri.parse('https://yummly2.p.rapidapi.com/feeds/list'), headers: {
       'content-type': 'application/json',
       'x-rapidapi-host': 'yummly2.p.rapidapi.com',
-      'x-rapidapi-key': '6991e41207mshaaf1e8dd61f03fdp17fbe9jsn3c96953146c7'
+      'x-rapidapi-key': '6ec753e076mshc2fb295f62868c7p1ced2cjsne30e5a6c23f5'
     });
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       print(response.statusCode.toString());
+      print(data.toString());
 
       FoodList list = FoodList.fromJson(data);
       for (int i = 0; i < list.foodList.length; i++) {

@@ -6,9 +6,9 @@ part 'food_model.g.dart';
 
 @JsonSerializable()
 class Food{
-  final String foodName;
-  final String flag;
-  final String image;
+  final String? foodName;
+  final String? flag;
+  final String? image;
 
   Food({ required this.foodName, required this.flag, required this.image});
 

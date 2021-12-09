@@ -5,7 +5,7 @@ import 'package:flutter_food_app/view_model/food_database.dart';
 import 'package:flutter_food_app/view_model/netwok_response.dart';
 
 class FoodViewModel extends ChangeNotifier {
-  late List<Food> listOfFood;
+  late List<Food> listOfFood = [];
   late Future<FoodList> _foodList;
 
   final NetworkResponse _networkResponse = NetworkResponse();
@@ -19,7 +19,6 @@ class FoodViewModel extends ChangeNotifier {
 
   Future<List<Food>> storeToDatabase() async {
     listOfFood = await getFoodListFromNetworkResponse().then((value) => value.foodList);
-    notifyListeners();
     for (int i = 0; i < listOfFood.length; i++) {
       Food food = listOfFood[i];
       FoodDatabase.db.insertFood(food);
@@ -32,8 +31,9 @@ class FoodViewModel extends ChangeNotifier {
   }
 
   Future<List<Food>> getFoodListFromDatabase() async {
-  await FoodDatabase.db.getFoodList().then((value) => listOfFood =value  );
+    await FoodDatabase.db.getFoodList().then((value) => listOfFood= value  );
     notifyListeners();
     return listOfFood;
   }
 }
+

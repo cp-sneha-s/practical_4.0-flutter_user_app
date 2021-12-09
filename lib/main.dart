@@ -4,7 +4,9 @@ import 'package:flutter_food_app/view_model/food_view_model.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp( ChangeNotifierProvider(create: (BuildContext context) { return FoodViewModel(); },
-  child: HomeScreen()));
+  runApp(ChangeNotifierProvider(
+      create: (BuildContext context) {
+        return FoodViewModel();
+      },
+      child: HomeScreen()));
 }
-
