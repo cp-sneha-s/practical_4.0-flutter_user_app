@@ -8,6 +8,7 @@ class UserDatabase {
 
   UserDatabase._init();
 
+
  Future<Database> initDb() async {
     return  openDatabase(join(await getDatabasesPath(), 'user.db'),
         version: 1, onCreate: (Database db, int version) async {
@@ -32,15 +33,21 @@ class UserDatabase {
     return userList;
   }
 
-  Future<int> deleteUser(User food) async {
+  Future<int> deleteUser(User user) async {
     final db = await initDb();
     return await db
-        .delete('user', where: "displayName = ?", whereArgs: [food.name]);
+        .delete('user', where: "name = ?", whereArgs: [user.name]);
   }
 
  Future<void> insertUser(User user) async {
     final db = await initDb();
      db.insert('user', user.toMap());
+  }
+
+  delelteAll()async{
+   final db = await initDb();
+   db.rawDelete('Delete from user');
+   print('all data deleted!');
   }
 
 

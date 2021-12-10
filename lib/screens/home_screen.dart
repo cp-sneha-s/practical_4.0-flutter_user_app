@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_food_app/model/food_model.dart';
 import 'package:flutter_food_app/view_model/user_database.dart';
 import 'package:flutter_food_app/view_model/user_view_model.dart';
-import 'package:flutter_food_app/view_model/netwok_response.dart';
 import 'package:provider/provider.dart';
 import 'user_card.dart';
 
@@ -15,14 +14,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  NetworkResponse networkResponse = NetworkResponse();
   late Future<List<User>> futureList;
-  //
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //  futureList = Provider.of<UserViewModel>(context).getUserListFromNetworkResponse();
-  // }
+
+  @override
+  void initState() {
+    super.initState();
+    UserViewModel userViewModel = UserViewModel();
+    futureList = userViewModel.refreshDataFromApi();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,27 +33,49 @@ class _HomeScreenState extends State<HomeScreen> {
             title: const Text('Hello Users'),
             backgroundColor: Colors.blueGrey,
           ),
-          body:
-              Consumer<UserViewModel>(builder: (context, userViewModel, child) {
-                return FutureBuilder(
-              future:userViewModel.getUserListFromDatabase(),
-              builder: (context,snapshot){
-                if(snapshot.hasData){
-                  List<User> list = snapshot.data as List<User>;
-                  print(list.length.toString());
-                  return  ListView.builder(
-                    itemCount: list.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      User item = list[index];
-                      return FoodCard(item: item);
-                    },
-                  );
-                }else if(snapshot.hasError){
-                  throw Exception('Failed to load: '+ snapshot.error.toString());
-                }
-                return const Center(child: CircularProgressIndicator());
-              },
-            );
+          body: Consumer<UserViewModel>(builder: (context, userViewModel, child) {
+            return FutureBuilder(
+                future: futureList,
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return ListView.builder(
+                      itemCount: userViewModel.userList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        User user = userViewModel.userList[index];
+                        return UserCard(item: user,
+                            longpressCallback: (){
+                          setState(() {
+                            userViewModel.userList.remove(user);
+                          });
+                          });
+                      },
+                    );
+                  } else {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      List<User> list = snapshot.data as List<User>;
+                      return RefreshIndicator(
+                        onRefresh: () {
+                          setState(() {
+                        futureList=  userViewModel.refreshDataFromApi();
+                        });return futureList;  },
+                        child: ListView.builder(
+                            itemCount: list.length,
+                            itemBuilder: (context, index) {
+                              User user = list[index];
+                              return UserCard(item: user,longpressCallback:()
+                             {
+                               setState(() {
+                                 list.remove(user);
+                               });
+
+                             });
+                            }),
+                      );
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  }
+                });
           }),
         ),
       ),

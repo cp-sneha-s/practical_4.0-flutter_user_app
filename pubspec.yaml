@@ -17,6 +17,7 @@ dependencies:
   sqflite:
   path_provider:
   path:
+  pull_to_refresh:
 
 dev_dependencies:
   flutter_test:

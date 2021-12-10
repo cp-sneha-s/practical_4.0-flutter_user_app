@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_food_app/model/food_model.dart';
 import 'package:flutter_food_app/view_model/user_database.dart';
-import 'package:flutter_food_app/view_model/netwok_response.dart';
+import 'package:flutter_food_app/view_model/network_response_provider.dart';
 
 class UserViewModel extends ChangeNotifier {
    List<User> userList = [];
 
 
-  final NetworkResponse _networkResponse = NetworkResponse();
+  final NetworkResponseProvider _networkResponse = NetworkResponseProvider();
 
-  Future<List<User>> getUserListFromNetworkResponse()async{
-  Future<List<User>>  futureUserList= _networkResponse.getUserList();
-    notifyListeners();
-    return futureUserList;
-
+  UserViewModel(){
+    getUserListFromDatabase().then((value) => value= userList);
   }
 
-  Future<List<User>> storeToDatabase() async {
-    userList = await getUserListFromNetworkResponse().then((value) => value);
+  Future<List<User>> refreshDataFromApi() async {
+    userList = await _networkResponse.getUserList();
     for (int i = 0; i < userList.length; i++) {
       User user = userList[i];
       UserDatabase.db.insertUser(user);
-      notifyListeners();
       print('UserViewModel: data added to database ');
     }
     print('UserViewModel: ' + userList.length.toString());
@@ -30,8 +26,19 @@ class UserViewModel extends ChangeNotifier {
   }
 
   Future<List<User>> getUserListFromDatabase() async {
-   await UserDatabase.db.getUserList().then((value) => value= userList);
+  userList = await UserDatabase.db.getUserList();
    return userList;
   }
+
+  Future<void> deleteUserfronDb(User user)async{
+    await UserDatabase.db.deleteUser(user);
+    print('user deleted from list');
+  }
+  void deleteUser(User user){
+    deleteUserfronDb(user);
+    userList.remove(user);
+    notifyListeners();
+  }
+
 }
 
