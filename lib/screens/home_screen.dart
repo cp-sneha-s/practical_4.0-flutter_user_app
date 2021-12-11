@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     UserViewModel userViewModel = UserViewModel();
-    futureList = userViewModel.refreshDataFromApi() as Future<List<User>>;
+    futureList = userViewModel.refreshDataFromApi();
   }
 
   @override

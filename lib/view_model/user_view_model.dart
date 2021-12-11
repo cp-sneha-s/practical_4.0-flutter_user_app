@@ -16,6 +16,7 @@ class UserViewModel extends ChangeNotifier {
     List<User> userList = await _networkResponse.getUserList();
     for (int i = 0; i < userList.length; i++) {
       User user = userList[i];
+      UserDatabase.db.delelteAll();
       UserDatabase.db.insertUser(user);
       print('UserViewModel: data added to database ');
     }
