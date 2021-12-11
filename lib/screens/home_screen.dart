@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     UserViewModel userViewModel = UserViewModel();
-    futureList = userViewModel.refreshDataFromApi();
+    futureList = userViewModel.refreshDataFromApi() as Future<List<User>>;
   }
 
   @override
@@ -33,42 +33,48 @@ class _HomeScreenState extends State<HomeScreen> {
             title: const Text('Hello Users'),
             backgroundColor: Colors.blueGrey,
           ),
-          body: Consumer<UserViewModel>(builder: (context, userViewModel, child) {
+          body:
+              Consumer<UserViewModel>(builder: (context, userViewModel, child) {
             return FutureBuilder(
                 future: futureList,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return ListView.builder(
-                      itemCount: userViewModel.userList.length,
+                      itemCount: userViewModel.userList!.length,
                       itemBuilder: (BuildContext context, int index) {
-                        User user = userViewModel.userList[index];
-                        return UserCard(item: user,
-                            longpressCallback: (){
-                          setState(() {
-                            userViewModel.userList.remove(user);
-                          });
-                          });
+                        if (userViewModel.userList == null) {
+                          return const Text(
+                              'Please check your Network connection');
+                        } else {
+                          User user = userViewModel.userList![index];
+                          return UserCard(
+                              item: user,
+                              longpressCallback: () {
+                                userViewModel.deleteUser(user);
+                              });
+                        }
                       },
                     );
                   } else {
                     if (snapshot.connectionState == ConnectionState.done) {
-                      List<User> list = snapshot.data as List<User>;
+                      List<User>? list = snapshot.data as List<User>;
                       return RefreshIndicator(
                         onRefresh: () {
-                          setState(() {
-                        futureList=  userViewModel.refreshDataFromApi();
-                        });return futureList;  },
+                          futureList = userViewModel.refreshDataFromApi();
+                          return futureList;
+                        },
                         child: ListView.builder(
                             itemCount: list.length,
                             itemBuilder: (context, index) {
                               User user = list[index];
-                              return UserCard(item: user,longpressCallback:()
-                             {
-                               setState(() {
-                                 list.remove(user);
-                               });
-
-                             });
+                              return UserCard(
+                                  item: user,
+                                  longpressCallback: () {
+                                    setState(() {
+                                      list.remove(user);
+                                      userViewModel.deleteUserfronDb(user);
+                                    });
+                                  });
                             }),
                       );
                     } else {
