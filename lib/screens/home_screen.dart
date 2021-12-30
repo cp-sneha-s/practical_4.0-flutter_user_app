@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_food_app/model/food_model.dart';
+import 'package:flutter_food_app/seervicelocator/service_locator.dart';
 import 'package:flutter_food_app/view_model/user_database.dart';
 import 'package:flutter_food_app/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
@@ -15,11 +16,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<User>> futureList;
+  UserViewModel userViewModel = getIt<UserViewModel>();
 
   @override
   void initState() {
     super.initState();
-    UserViewModel userViewModel = UserViewModel();
     futureList = userViewModel.refreshDataFromApi();
   }
 
@@ -33,50 +34,57 @@ class _HomeScreenState extends State<HomeScreen> {
             title: const Text('Hello Users'),
             backgroundColor: Colors.blueGrey,
           ),
-          body: Consumer<UserViewModel>(builder: (context, userViewModel, child) {
-            return FutureBuilder(
-                future: futureList,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return ListView.builder(
-                      itemCount: userViewModel.userList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        User user = userViewModel.userList[index];
-                        return UserCard(item: user,
-                            longpressCallback: (){
-                          setState(() {
-                            userViewModel.userList.remove(user);
-                          });
-                          });
-                      },
-                    );
-                  } else {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      List<User> list = snapshot.data as List<User>;
-                      return RefreshIndicator(
-                        onRefresh: () {
-                          setState(() {
-                        futureList=  userViewModel.refreshDataFromApi();
-                        });return futureList;  },
-                        child: ListView.builder(
-                            itemCount: list.length,
-                            itemBuilder: (context, index) {
-                              User user = list[index];
-                              return UserCard(item: user,longpressCallback:()
-                             {
-                               setState(() {
-                                 list.remove(user);
-                               });
-
-                             });
-                            }),
+          body:
+          ChangeNotifierProvider(
+            create: (context)=> UserViewModel(),
+            child: Consumer<UserViewModel>(builder: (context, userViewModel, child) {
+              return FutureBuilder(
+                  future: futureList,
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return ListView.builder(
+                        itemCount: userViewModel.userList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          User user = userViewModel.userList[index];
+                          return UserCard(
+                              item: user,
+                              longpressCallback: () {
+                                userViewModel.userList.remove(user);
+                              });
+                        },
                       );
                     } else {
-                      return const Center(child: CircularProgressIndicator());
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        List<User> list = snapshot.data as List<User>;
+                        return RefreshIndicator(
+                          onRefresh: () {
+                            setState(() {
+                              futureList =
+                                  userViewModel.refreshDataFromApi();
+                            });
+                            return futureList;
+                          },
+                          child: ListView.builder(
+                              itemCount: list.length,
+                              itemBuilder: (context, index) {
+                                User user = list[index];
+                                return UserCard(
+                                    item: user,
+                                    longpressCallback: () {
+                                      userViewModel.deleteUserfronDb(user);
+                                      setState(() {
+                                        list.remove(user);
+                                      });
+                                    });
+                              }),
+                        );
+                      } else {
+                        return const Center(child: CircularProgressIndicator());
+                      }
                     }
-                  }
-                });
-          }),
+                  });
+            }),
+          ),
         ),
       ),
     );
