@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_food_app/model/food_model.dart';
-import 'package:flutter_food_app/seervicelocator/service_locator.dart';
-import 'package:flutter_food_app/view_model/user_database.dart';
+import 'package:flutter_food_app/servicelocator/service_locator.dart';
 import 'package:flutter_food_app/view_model/user_view_model.dart';
 import 'package:provider/provider.dart';
 import 'user_card.dart';
@@ -71,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 return UserCard(
                                     item: user,
                                     longpressCallback: () {
-                                      userViewModel.deleteUserfronDb(user);
+                                      userViewModel.deleteUserfromDb(user);
                                       setState(() {
                                         list.remove(user);
                                       });

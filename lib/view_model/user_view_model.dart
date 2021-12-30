@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_food_app/model/food_model.dart';
-import 'package:flutter_food_app/seervicelocator/service_locator.dart';
+import 'package:flutter_food_app/servicelocator/service_locator.dart';
 import 'package:flutter_food_app/view_model/user_database.dart';
 import 'package:flutter_food_app/view_model/network_response_provider.dart';
 
@@ -32,12 +32,12 @@ class UserViewModel extends ChangeNotifier {
    return userList;
   }
 
-  Future<void> deleteUserfronDb(User user)async{
+  Future<void> deleteUserfromDb(User user)async{
     await UserDatabase.db.deleteUser(user);
     print('user deleted from list');
   }
   void deleteUser(User user){
-    deleteUserfronDb(user);
+    deleteUserfromDb(user);
     userList.remove(user);
     notifyListeners();
   }
